@@ -1,4 +1,4 @@
-# LFI-RFI
+# TRAN CONG DANH - SVTT - Mentor: LUU VAN LAN - LFI/RFI - Day Started: 5/07/2024.
 ## Table of contents
 1. [File inclusion](#file-inclusion)
 2. [What are the differences between File Inclusion vs. Directory Path Traversal?](#what-are-the-differences-between-file-inclusion-vs-directory-path-traversal)
